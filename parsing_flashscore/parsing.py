@@ -2,11 +2,12 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from time import sleep
+from bs4 import BeautifulSoup
 
 
 def get_archive_data(url, seasons: list) -> dict:
+    data_season = {}
     for season in seasons:
-        data_season = {}
         try:
             options = Options()
             options.add_argument("user-data-dir=C:\\profile")
@@ -23,8 +24,14 @@ def get_archive_data(url, seasons: list) -> dict:
                 print(match_link)
                 match_link = f"https://www.flashscore.ru/match/{match_link}/#match-summary/match-summary"
                 data_match = get_information_about_match(match_link)
-                data_season[season] = {k: v for k, v in data_match.items()}
+                data_season[season] = {**data_season[season], **data_match}
+                
+                # тест, чтобы добавлять первые 2 игры из каждого сезона и
+                # идти в следующий сезон
+                
                 print(f" словарь дата сизон {data_season}")
+                if len(data_season[season]) > 1:
+                    break
         
         except Exception as ex:
             print(ex)
@@ -61,12 +68,15 @@ def more_games(driver):
 
 
 def getter_blocks(driver):
-    blocks_all_games = driver.find_elements(
-        By.CLASS_NAME("event__match event__match--static event__match--last event__match--twoLine"))
+    # blocks_all_games = driver.find_elements(
+    #     By.CLASS_NAME("event__match event__match--static event__match--last event__match--twoLine"))
+    
+    blocks_all_games = driver.find_elements(By.XPATH, "//*[@title='Подробности матча!']")
     return blocks_all_games
 
 
 def get_information_about_match(link):
+    print('go')
     data_match = {}
     try:
         driver_2 = webdriver.Chrome()
@@ -85,6 +95,10 @@ def get_information_about_match(link):
         all_lines = driver_2.find_elements(By.XPATH, "//div[@class='soccer__row']")
         all_lines.reverse()
         
+        # all_lines = driver_2.find_element(
+        #     By.CSS_SELECTOR, "div[class=container__detail]").get_attribute("innerHTML")
+        # print(all_lines)
+        
         corners_minutes, goals_minutes = get_corners_and_goals_minutes(all_lines)
         data_match[f"{home}-{away}"] = {"corners": corners_minutes, "goals": goals_minutes}
         print(data_match)
@@ -98,42 +112,44 @@ def get_corners_and_goals_minutes(all_lines):
     corners_minutes = []
     goals_minutes = []
     count = 0
+    count_2 = 0
     for el in all_lines:
-        if count != 2:
-            try:
-                el.find_element(By.XPATH, ".//*[@class='whistle-ico ']")
-                count += 1
-                print('матч начался' if count == 1 else 'закончился первый тайм')
-            except Exception:
-                pass
-            if count == 1:
-                corners_minutes = corner_detector(el, corners_minutes)
-                goals_minutes = goals_detector(el, goals_minutes)
-                now_minute = el.find_element(
-                    By.XPATH, ".//*[@class='soccer__time']").text
-                print(now_minute)
-                print(f"{corners_minutes} угловой")
-                print(f"{goals_minutes} гол")
+        if count_2 != 25:
+            if count != 2:
+                try:
+                    el.find_element(By.XPATH, ".//*[@class='whistle-ico ']")
+                    count += 1
+                    print('матч начался' if count == 1 else 'закончился первый тайм')
+                except Exception:
+                    pass
+                if count == 1:
+                    corners_minutes, goals_minutes = detector(el, corners_minutes, goals_minutes)
+                    now_minute = el.find_element(
+                        By.XPATH, ".//*[@class='soccer__time']").text
+                    print(now_minute)
+                    print(f"{corners_minutes} угловой")
+                    print(f"{goals_minutes} гол")
+            count_2 += 1
     return corners_minutes, goals_minutes
 
 
-def corner_detector(el, corners_minutes):
-    try:
-        corner_minute = el.find_element(
-            By.XPATH, ".//*[@class='corner-ico ']/../../div[@class='soccer__time']").text[:-1]
-        if "+" in corner_minute:
-            corner_minute = sum(list(map(int, corner_minute.split("+"))))
-        else:
-            corner_minute = int(corner_minute)
-        print('корнер найден')
-        corners_minutes.append(corner_minute)
-    except Exception as ex:
-        print('')
-    
-    return corners_minutes
+# def corner_detector(el, corners_minutes):
+#     try:
+#         corner_minute = el.find_element(
+#             By.XPATH, ".//*[@class='corner-ico ']/../../div[@class='soccer__time']").text[:-1]
+#         if "+" in corner_minute:
+#             corner_minute = sum(list(map(int, corner_minute.split("+"))))
+#         else:
+#             corner_minute = int(corner_minute)
+#         print('корнер найден')
+#         corners_minutes.append(corner_minute)
+#     except Exception as ex:
+#         print('')
+#
+#     return corners_minutes
 
 
-def goals_detector(el, goals_minutes):
+def detector(el, goals_minutes, corners_minutes):
     try:
         goal_minute = el.find_element(
             By.XPATH, ".//*[@class='footballGoal-ico ']/../../div[@class='soccer__time']").text[:-1]
@@ -144,8 +160,20 @@ def goals_detector(el, goals_minutes):
         print('гол найден')
         goals_minutes.append(goal_minute)
     except Exception:
-        print('')
+        pass
     
-    return goals_minutes
+    try:
+        corner_minute = el.find_element(
+            By.XPATH, ".//*[@class='corner-ico ']/../../div[@class='soccer__time']").text[:-1]
+        if "+" in corner_minute:
+            corner_minute = sum(list(map(int, corner_minute.split("+"))))
+        else:
+            corner_minute = int(corner_minute)
+        print('корнер найден')
+        corners_minutes.append(corner_minute)
+    except Exception as ex:
+        pass
+    
+    return corners_minutes, goals_minutes
 
 

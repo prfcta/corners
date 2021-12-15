@@ -12,11 +12,17 @@ data = {}
 
 
 def main():
-    for league_name, link in links.items():
-        data_season = parsing.get_archive_data(link, seasons)
-        data[league_name] += data_season
+    count_3 = 0
+    if count_3 != 3:
+        for league_name, link in links.items():
+            data[league_name] = {}
+            data_season = parsing.get_archive_data(link, seasons)
+            data[league_name] = {**data[league_name], **data_season}
+            count_3 += 1
+    return data
 
 
 if __name__ == "__main__":
-    main()
+    res_data = main()
+    print(res_data)
 
