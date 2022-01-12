@@ -27,6 +27,7 @@ def get_driver():
         setattr(threadLocal, 'driver_2', driver_2)
     return driver_2
 
+
 def end_func(response):
     print('запустилась end_func')
     season = response[0][1]
@@ -35,10 +36,10 @@ def end_func(response):
         data_match = event[0]
         print(data_match)
         season = event[1]
-        driver_2 = event[2]
-        print(driver_2)
-        driver_2.close()
-        driver_2.quit()
+        # driver_2 = event[2]
+        # print(driver_2)
+        # driver_2.close()
+        # driver_2.quit()
         print('driver_2 закрылся')
         data_season[season] = {**data_season[season], **data_match}
         
@@ -164,7 +165,8 @@ def get_information_about_match(event):
     #     driver_2.close()
     #     driver_2.quit()
     print(data_match)
-    return data_match, season, driver_2
+    # return data_match, season, driver_2
+    return data_match, season
 
 
 def get_corners_and_goals_minutes(all_lines, home, away, driver_2):
