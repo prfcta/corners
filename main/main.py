@@ -38,6 +38,7 @@ def saver(league_name, seasons, link):
     pfparsing.data_season.clear()
     start_time = time.time()
     data_league = pfmain.new_main(league_name, seasons, link)
+    print(data_league)
     dbmain.saver(data_league)
     print('данные сохранены')
     print(time.time() - start_time, "время выполнения сбора данных")

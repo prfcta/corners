@@ -27,7 +27,22 @@ def get_driver():
         setattr(threadLocal, 'driver_2', driver_2)
     return driver_2
 
-
+def end_func(response):
+    print('запустилась end_func')
+    season = response[0][1]
+    data_season[season] = {}
+    for event in response:
+        data_match = event[0]
+        print(data_match)
+        season = event[1]
+        driver_2 = event[2]
+        print(driver_2)
+        driver_2.close()
+        driver_2.quit()
+        print('driver_2 закрылся')
+        data_season[season] = {**data_season[season], **data_match}
+        
+        
 def start_multiprocessing_parsing(links_box):
     print('запустился мультипроцессинг')
     with multiprocessing.Pool(processes=3) as p:
@@ -35,18 +50,6 @@ def start_multiprocessing_parsing(links_box):
         p.close()
         p.join()
         
-       
-def end_func(response):
-    season = response[0][1]
-    data_season[season] = {}
-    for event in response:
-        data_match = event[0]
-        season = event[1]
-        driver_2 = event[2]
-        driver_2.close()
-        driver_2.quit()
-        data_season[season] = {**data_season[season], **data_match}
-    
     
 def get_season_data(league_name, season, link) -> dict:
     print('заустился парсинг гет сизон дата')
@@ -71,7 +74,7 @@ def get_season_data(league_name, season, link) -> dict:
         print('наичнаем проходить циклом для сбора ссылок в список')
         for match in all_season_matches:
             # if count < len(all_season_matches) + 5:
-            if count < 25:
+            if count < 11:
                 # sleep(1)
                 match_link = match.get_attribute("id")[4:]
                 match_link = f"https://www.flashscore.ru/match/{match_link}/#match-summary/match-summary"
@@ -86,6 +89,7 @@ def get_season_data(league_name, season, link) -> dict:
 
     start_multiprocessing_parsing(links_box)
     print(f"проверка {league_name} завершена")
+    print(data_season)
     return data_season
 
 
@@ -159,6 +163,7 @@ def get_information_about_match(event):
     # finally:
     #     driver_2.close()
     #     driver_2.quit()
+    print(data_match)
     return data_match, season, driver_2
 
 
