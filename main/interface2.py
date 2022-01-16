@@ -129,6 +129,7 @@ def mainmenu():
         mainmenu()
     elif selection == 2:
         run_analysis()
+        mainmenu()
     elif selection == 3:
         answer_delete = ''
         while answer_delete not in ('y', 'n'):
