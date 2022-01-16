@@ -1,6 +1,10 @@
 from peewee import SqliteDatabase, Model, ForeignKeyField, CharField, DateField, FloatField
+import os
 
-db = SqliteDatabase('C:\MyPythonProjects\Corners\data_base\corners_data1.db')
+
+path_for_db = os.getcwd()
+db = SqliteDatabase(f'{path_for_db}/data_base_corners.db')
+
 
 
 class Base(Model):
@@ -18,6 +22,7 @@ class League(Base):
 class Season(Base):
     # league_id = ForeignKeyField(League)
     season_date = CharField(unique=True)
+    
     # league_name = CharField()
     
     class Meta:
@@ -32,8 +37,8 @@ class CollectionsLeagueSeason(Base):
     
     class Meta:
         table_name = 'LeaguesAndSeasons'
-    
-    
+
+
 class Match(Base):
     teams = CharField()
     season_id = ForeignKeyField(Season)
@@ -49,16 +54,19 @@ class Match(Base):
         table_name = "Matches"
 
 
+db.create_tables([League, Season, Match, CollectionsLeagueSeason], safe=True)
+
+
 def delete_db():
     db.drop_tables([League, Season, Match, CollectionsLeagueSeason], safe=True)
     db.create_tables([League, Season, Match, CollectionsLeagueSeason], safe=True)
     print('база данных полностью удалена')
-    
+
 
 if __name__ == "__main__":
     delete_db()
 
 
 
-    
-    
+
+
