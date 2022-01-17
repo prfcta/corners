@@ -14,19 +14,24 @@ all_leagues_names = {
     }
 
 
-def select_choice(selections):
+def select_choice(selections: dict) -> int:
     """
     Функция работает до тех пор, пока пользователь не введет одну
     из цифр, которая соответствует пункту в меню.
     Возвращает пункт меню.
     """
+    if selections is not dict:
+        raise ValueError('select_choice должен принимать словарь')
     while True:
         user_choice = input("-> ")
         if user_choice.isdigit():
             user_choice = int(user_choice)
-            if user_choice in selections:
-                return user_choice
         else:
+            raise ValueError('необходимо ввести число')
+        if user_choice in selections:
+            return user_choice
+        else:
+            print('необходимо выбрать один из пунктов меню')
             continue
         
         

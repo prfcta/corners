@@ -63,7 +63,7 @@ def work(result, analysis_answer, minute):
 
 
 def main():
-    result = dbmain.get_statistic(season_id=1)
+    result = dbmain.get_statistic(season_id=1, league_id=1)
     work(result)
 
 
