@@ -26,4 +26,11 @@
 #### Интерфейс программы: 
 ![Главное меню](https://github.com/prfcta/corners/blob/master/screenshots/mainmenu.jpg "Главное меню")
 
+Список доступных лиг и сезонов.
+![Парсинг](https://github.com/prfcta/corners/blob/master/screenshots/parsing.jpg)
 
+Возможность удалить данные из БД.
+![База данных](https://github.com/prfcta/corners/blob/master/screenshots/dbdelete.jpg)
+
+Расчет вероятностей событий.
+![Аналитика](https://github.com/prfcta/corners/blob/master/screenshots/analyzing.jpg)
