@@ -102,7 +102,7 @@ def get_driver():
     if driver is None:
         service = Service(ChromeDriverManager().install())
         options2 = Options()
-        # options2.add_argument('--headless')
+        options2.add_argument('--headless')
         ChromeDriverManager(log_level=0)
         driver = webdriver.Chrome(service=service, options=options2)
         setattr(threadLocal, 'driver', driver)

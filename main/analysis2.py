@@ -58,8 +58,8 @@ def work(result, analysis_answer, minute):
         if answer == 'yes':
             corners += 1
     ver = probability(games, corners)
-    print(f'проверено {len(result)} матчей. в {games} были условия для ставки, в {corners} из них ставка зашла бы')
-    print(f'проходимость - {ver}%')
+    print(f'проверено {len(result)} матчей. в {games} были заданные условия, в {corners} матчей угловой был подан.')
+    print(f'вероятность углового после заданной минуты - {ver}%')
 
 
 def main():
