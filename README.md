@@ -24,6 +24,6 @@
 3. Минуту, относительно которой будут происходить расчеты.
 
 #### Интерфейс программы: 
-![Главное меню](https://github.com/prfcta/corners/blob/master/screenshots/mainmenu.jpg)
+![Главное меню](https://github.com/prfcta/corners/blob/master/screenshots/mainmenu.jpg "Главное меню")
 
 
