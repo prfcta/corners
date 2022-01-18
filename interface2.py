@@ -14,13 +14,13 @@ all_leagues_names = {
     }
 
 
-def select_choice(selections: dict) -> int:
+def select_choice(selections) -> int:
     """
     Функция работает до тех пор, пока пользователь не введет одну
     из цифр, которая соответствует пункту в меню.
     Возвращает пункт меню.
     """
-    if selections is not dict:
+    if type(selections) != dict:
         raise ValueError('select_choice должен принимать словарь')
     while True:
         user_choice = input("-> ")
@@ -35,7 +35,7 @@ def select_choice(selections: dict) -> int:
             continue
         
         
-def run_parsing():
+def run_parsing() -> dict:
     print("1. АПЛ\n2. Ла лига\n3. Бундес лига\n4. Серия А\n5. Лига 1\n6. РПЛ\n7. Назад")
     
     selections_link_leagues = {

@@ -1,7 +1,7 @@
 import unittest
-from main.interface2 import select_choice
+from interface2 import select_choice
 import sys
-sys.path.append('C:\MyPythonProjects\Corners')
+# sys.path.append('C:\MyPythonProjects\Corners')
 
 
 class SelectChoiceTest(unittest.TestCase):
