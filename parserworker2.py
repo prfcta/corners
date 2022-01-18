@@ -75,7 +75,7 @@ class ParserLinksBox:
         self.id_box = (element.get_attribute("id")[4:] for element in self.elements_box)
 
         
-def start_parsing(link):
+def start_parsing(link: str) -> tuple:
     """
     Поиск и сохранение id всех матчей в кортеж.
     """
@@ -87,11 +87,12 @@ def start_parsing(link):
     return parser.id_box
 
     
-def create_links_with_id(id_box):
+def create_links_with_id(id_box: tuple) -> list:
     """
     Конструктор ссылки из id матча.
     """
-    
+    if type(id_box) != tuple:
+        raise TypeError('функция должна принять кортеж из id')
     links_box = list(map(lambda match_id: f"https://www.flashscore.ru/match/{match_id}/"
                                           f"#match-summary/live-commentary/0", id_box))
     return links_box
@@ -194,10 +195,12 @@ def detector(el, home, away, home_corners_minutes, away_corners_minutes, home_go
     return home_corners_minutes, away_corners_minutes, home_goals_minutes, away_goals_minutes
 
 
-def parserworker(link):
+def parserworker(link: str) -> list:
     """
     Собираются id каждой игры. Затем происходит сбор данных о каждой игре отдельно.
     """
+    if type(link) != str:
+        raise TypeError('ссылка должна быть строкой')
     id_box = start_parsing(link)
     links_box = create_links_with_id(id_box)
     data_all_matches = ThreadPool(3).map(multithreading_start, links_box[:10])
