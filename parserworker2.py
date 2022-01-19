@@ -87,12 +87,10 @@ def start_parsing(link: str) -> tuple:
     return parser.id_box
 
     
-def create_links_with_id(id_box: tuple) -> list:
+def create_links_with_id(id_box) -> list:
     """
     Конструктор ссылки из id матча.
     """
-    if type(id_box) != tuple:
-        raise TypeError('функция должна принять кортеж из id')
     links_box = list(map(lambda match_id: f"https://www.flashscore.ru/match/{match_id}/"
                                           f"#match-summary/live-commentary/0", id_box))
     return links_box
